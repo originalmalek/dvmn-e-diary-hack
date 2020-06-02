@@ -9,7 +9,11 @@ def get_schoolkid(name):
 
 
 def fix_marks(schoolkid):
-    return schoolkid.mark_set.filter(points__lt=4).update(points=random.choice((4, 5)))
+    marks = schoolkid.mark_set.filter(points__lt=4)
+    for mark in marks:
+        mark.points = random.choice((4, 5))
+        mark.save()
+    return marks
 
 
 def remove_chastisements(schoolkid):
@@ -60,6 +64,8 @@ def main():
         print('Ученик не найден.')
     except MultipleObjectsReturned:
         print('Найдено несколько учеников. Повторите действие.')
+    except AttributeError:
+        print('Предмет не найден.')
 
 
 if __name__ == '__main__':
